@@ -139,24 +139,27 @@ class _HomeState extends State<Home> {
             _toDoList.removeAt(index);
             _saveData();
 
-            final snack = SnackBar(
-              content: Text("Tarefa \"${_lastRemoved["title"]}\" removida!"),
-              action: SnackBarAction(
-                label: "Desfazer",
-                onPressed: () {
-                  setState(() {
-                    _toDoList.insert(_lastRemovedPosition, _lastRemoved);
-                    _saveData();
-                  });
-                },
-              ),
-              duration: Duration(seconds: 2),
-            );
-
+            final snack = unDelete(_lastRemoved, _lastRemovedPosition, _toDoList);
             Scaffold.of(context).removeCurrentSnackBar();
             Scaffold.of(context).showSnackBar(snack);
           });
         });
+  }
+
+  SnackBar unDelete(lastRemoved, lastRemovedPosition, toDoList) {
+    return SnackBar(
+      content: Text("Tarefa \"${lastRemoved["title"]}\" removida!"),
+      action: SnackBarAction(
+        label: "Desfazer",
+        onPressed: () {
+          setState(() {
+            toDoList.insert(lastRemovedPosition, lastRemoved);
+            _saveData();
+          });
+        },
+      ),
+      duration: Duration(seconds: 2),
+    );
   }
 
   Future<File> _getFile() async {
